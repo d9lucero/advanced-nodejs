@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/jscomplete/advanced-nodejs/issues"
   },
-  "homepage": "https://github.com/jscomplete/advanced-nodejs#readme"
+  "homepage": "https://github.com/jscomplete/advanced-nodejs#readme",
+  "prettier":{
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "printWidth": 100
+  }
 }
