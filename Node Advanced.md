@@ -336,15 +336,21 @@ To switch between these two modes the methods `resume` and `pause` are used.
 ```js
     const {Writable} = require('stream')
     const outStream = new Writable({
+        /** what the stream uses to send data to the resources
+         * chunk is a buffer
+         * encoding is the type of encoding used usually can be ignored
+         * callback is what to call after it finishes.
+         * 
+        */
         write(chunk,ecoding,callback){
             console.log(chunk.toString())
             callback()
         }
     })
-    
     //consuming
     process.stdin.pipe(outStream);
 ```
+
 
 ## Implement readable stream
 
@@ -354,6 +360,7 @@ To switch between these two modes the methods `resume` and `pause` are used.
     inStream.push("asdasdas");
     inStream.push(null);
 ```
+
 This wouldn't be so usefull since we're pre-pushing data in the stream. We need the stream to actually get on demand. To do this, we should implement the read method in the readable stream.
 
 ```js
@@ -373,6 +380,43 @@ This wouldn't be so usefull since we're pre-pushing data in the stream. We need 
             "asd"
         )
     })
+
+    process.on('error',process.exit)_
+```
+
+## Duplex streams
+
+```js
+const {Duplex} = require('stream')
+const inoutStream = new Duplex({
+    write(chunk,encoding,callback){
+        console.log(chunk.toString())
+        callback()
+    },
+    read(size){
+        if(endCondition){
+            this.push(null);
+            return
+        }
+        this.push(input)
+    }
+})
+```
+The readable and writable streams of the duplex stream operate independant of each other.
+
+## Transform stream
+
+It is a duplex stream with the power of transforming the input into the output.
+
+```js
+const {Transform} = require('stream')
+const upperCaseTr = new Transform({
+    transform(chunk,encoding,callback){
+        this.push(chunk.toString().toUpperCase())
+        callback()
+    }
+})
+process.stdin.pipe(upperCaseTr).pipe(process.stdout)
 ```
 
 
